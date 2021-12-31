@@ -344,3 +344,25 @@ INNER JOIN public.dim_ports p ON i.port_code = p.port_code) s
 CROSS JOIN (SELECT COUNT(*) as factCount FROM fact_immigration i INNER JOIN dim_time t ON i.arrdate = t.sas_timestamp 
 WHERE t.year = 2016) f
 """
+
+
+## Testing Data
+imigrants_by_country = """
+SELECT c.country, COUNT(*) FROM fact_immigration i
+INNER JOIN dim_countries c ON i.country_id = c.country_id
+INNER JOIN dim_time t ON i.arrdate=t.sas_timestamp
+WHERE t.year=2016 AND t.month=4
+GROUP BY c.country
+ORDER BY count DESC
+LIMIT 10;
+"""
+
+arrival_days = """
+SELECT t.day_of_week,COUNT(*) as count
+FROM fact_immigration i
+INNER JOIN dim_ports p ON i.port_id = p.port_id
+INNER JOIN dim_time t ON i.arrdate=t.sas_timestamp
+WHERE t.year=2016 AND t.month=4
+GROUP BY t.day_of_week
+ORDER BY t.day_of_week
+"""
